@@ -20,19 +20,19 @@ namespace TodoApi.Controllers
             _context = context;
         }
 
-        /*/ GET: api/TodoItems
+        // GET: api/TodoItems
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TodoItem>>> GetTodoItems()
         {
             return await _context.TodoItems.ToListAsync();
-        }*/
-        [HttpGet]
+        }//*/
+        /*[HttpGet]
         public string Get()
         {
             return "Hello World";
-        }
+        }*/
 
-        /*/ GET: api/TodoItems/5
+        // GET: api/TodoItems/5
         [HttpGet("{id}")]
         public async Task<ActionResult<TodoItem>> GetTodoItem(long id)
         {
@@ -108,6 +108,6 @@ namespace TodoApi.Controllers
         private bool TodoItemExists(long id)
         {
             return _context.TodoItems.Any(e => e.Id == id);
-        }*/
+        }//*/
     }
 }
