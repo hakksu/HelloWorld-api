@@ -79,16 +79,17 @@ public class Tests
     }
 
     [Test]
-    public void PutTodoItem_WithInvalidId_ReturnsNotFound()
+    public void PutTodoItem_WithInvalidId_ReturnsBadRequestResult()
     {
-        long id=999;
+        long id=1;
         var updatedTodo = _context.TodoItems.Find(id);
         updatedTodo.Name = "Updated Todo";
         updatedTodo.IsComplete = true ;
 
+        id=999;
         var result = _controller.PutTodoItem(id, updatedTodo).Result;
 
-        Assert.That(result, Is.InstanceOf<Microsoft.AspNetCore.Mvc.NotFoundResult>()); //抓999會返回NotFound
+        Assert.That(result, Is.InstanceOf<Microsoft.AspNetCore.Mvc.BadRequestResult>()); //抓999會返回NotFound
     }
 
     [Test]

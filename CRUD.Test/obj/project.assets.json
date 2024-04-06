@@ -8952,11 +8952,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "d:\\VS Code\\HelloWorld api\\CRUD.Test\\CRUD.Test.csproj",
+      "projectUniqueName": "D:\\VS Code\\HelloWorld api\\CRUD.Test\\CRUD.Test.csproj",
       "projectName": "CRUD.Test",
-      "projectPath": "d:\\VS Code\\HelloWorld api\\CRUD.Test\\CRUD.Test.csproj",
+      "projectPath": "D:\\VS Code\\HelloWorld api\\CRUD.Test\\CRUD.Test.csproj",
       "packagesPath": "C:\\Users\\nono\\.nuget\\packages\\",
-      "outputPath": "d:\\VS Code\\HelloWorld api\\CRUD.Test\\obj\\",
+      "outputPath": "D:\\VS Code\\HelloWorld api\\CRUD.Test\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\nono\\AppData\\Roaming\\NuGet\\NuGet.Config"

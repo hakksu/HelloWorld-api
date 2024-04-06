@@ -317,6 +317,7 @@ d:\VS Code\HelloWorld api\CRUD.Test\bin\Debug\net8.0\runtimes\win\lib\net7.0\Sys
 d:\VS Code\HelloWorld api\CRUD.Test\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Windows.Extensions.dll
 d:\VS Code\HelloWorld api\CRUD.Test\bin\Debug\net8.0\TodoApi.dll
 d:\VS Code\HelloWorld api\CRUD.Test\bin\Debug\net8.0\TodoApi.pdb
+d:\VS Code\HelloWorld api\CRUD.Test\bin\Debug\net8.0\TodoApi.xml
 d:\VS Code\HelloWorld api\CRUD.Test\obj\Debug\net8.0\CRUD.Test.csproj.AssemblyReference.cache
 d:\VS Code\HelloWorld api\CRUD.Test\obj\Debug\net8.0\CRUD.Test.GeneratedMSBuildEditorConfig.editorconfig
 d:\VS Code\HelloWorld api\CRUD.Test\obj\Debug\net8.0\CRUD.Test.AssemblyInfoInputs.cache

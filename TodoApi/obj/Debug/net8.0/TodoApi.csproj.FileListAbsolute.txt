@@ -5,6 +5,7 @@ d:\VS Code\HelloWorld api\TodoApi\bin\Debug\net8.0\TodoApi.deps.json
 d:\VS Code\HelloWorld api\TodoApi\bin\Debug\net8.0\TodoApi.runtimeconfig.json
 d:\VS Code\HelloWorld api\TodoApi\bin\Debug\net8.0\TodoApi.dll
 d:\VS Code\HelloWorld api\TodoApi\bin\Debug\net8.0\TodoApi.pdb
+d:\VS Code\HelloWorld api\TodoApi\bin\Debug\net8.0\TodoApi.xml
 d:\VS Code\HelloWorld api\TodoApi\bin\Debug\net8.0\Azure.Core.dll
 d:\VS Code\HelloWorld api\TodoApi\bin\Debug\net8.0\Azure.Identity.dll
 d:\VS Code\HelloWorld api\TodoApi\bin\Debug\net8.0\Humanizer.dll
@@ -251,6 +252,7 @@ d:\VS Code\HelloWorld api\TodoApi\obj\Debug\net8.0\scopedcss\bundle\TodoApi.styl
 d:\VS Code\HelloWorld api\TodoApi\obj\Debug\net8.0\TodoApi.csproj.Up2Date
 d:\VS Code\HelloWorld api\TodoApi\obj\Debug\net8.0\TodoApi.dll
 d:\VS Code\HelloWorld api\TodoApi\obj\Debug\net8.0\refint\TodoApi.dll
+d:\VS Code\HelloWorld api\TodoApi\obj\Debug\net8.0\TodoApi.xml
 d:\VS Code\HelloWorld api\TodoApi\obj\Debug\net8.0\TodoApi.pdb
 d:\VS Code\HelloWorld api\TodoApi\obj\Debug\net8.0\TodoApi.genruntimeconfig.cache
 d:\VS Code\HelloWorld api\TodoApi\obj\Debug\net8.0\ref\TodoApi.dll
