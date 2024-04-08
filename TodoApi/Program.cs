@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Models;
-
+using Microsoft.AspNetCore.StaticFiles;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -50,7 +50,10 @@ else//在生產環境中執行時
 }
 
 app.UseHttpsRedirection();//HTTPS 重新導向中介軟體
-app.UseStaticFiles();//靜態檔案中介軟體  啟用靜態檔案存取
+
+//靜態檔案中介軟體  啟用靜態檔案存取   /images/test1.png
+app.UseStaticFiles();
+
 app.UseCookiePolicy();//Cookie原則中介軟體 
 app.UseRouting();//路由中介軟體 啟用路由
 app.UseCors(MyAllowSpecificOrigins);//跨源资源共享中介軟體
