@@ -12,7 +12,7 @@ builder.Services.AddDbContext<TodoContext>(opt =>
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
+//builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen();
 builder.Services.Configure<CookiePolicyOptions>(options =>
 {
@@ -56,7 +56,7 @@ app.UseRouting();//路由中介軟體 啟用路由
 app.UseCors(MyAllowSpecificOrigins);//跨源资源共享中介軟體
 app.UseAuthentication();//驗證中介軟體 身分驗證
 app.UseAuthorization();//授權中介軟體  身分授權
-app.UseSession();//工作階段中介軟體
+//app.UseSession();//工作階段中介軟體
 //註冊 Middleware 的方法
 app.Use(async (context, next) =>
             {
