@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Models;
-using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.AspNetCore.Authentication.Cookies;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -14,6 +16,15 @@ builder.Services.AddDbContext<TodoContext>(opt =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 //builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen();
+
+// 添加身份驗證服務
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login";   //用戶未經驗證時將被導向的路徑
+        options.AccessDeniedPath = "/Account/AccessDenied";  //拒絕訪問路徑是用戶權限不足時將被導向的路徑
+    });
+
 builder.Services.Configure<CookiePolicyOptions>(options =>
 {
     // This lambda determines whether user consent for non-essential 
@@ -51,12 +62,22 @@ else//在生產環境中執行時
 
 app.UseHttpsRedirection();//HTTPS 重新導向中介軟體
 
-//靜態檔案中介軟體  啟用靜態檔案存取   /images/test1.png
+//靜態檔案中介軟體  啟用靜態檔案存取   /images/test.png
 app.UseStaticFiles();
 
-app.UseCookiePolicy();//Cookie原則中介軟體 
+//Cookie原則中介軟體 
+app.UseCookiePolicy(new CookiePolicyOptions
+{
+    // 將 Secure 設為 Always，以便在生產環境中要求安全連接
+    Secure = CookieSecurePolicy.Always,  // Cookie 只能在安全連接（HTTPS）中傳遞
+    // 設定 Cookie 名稱
+    HttpOnly = HttpOnlyPolicy.Always,  //防止客戶端腳本訪問 Cookie。
+    // 設定 Cookie 的 SameSite 屬性
+    MinimumSameSitePolicy = SameSiteMode.Strict  //強制要求瀏覽器在跨站請求時不要發送 Cookie。
+});
+
 app.UseRouting();//路由中介軟體 啟用路由
-app.UseCors(MyAllowSpecificOrigins);//跨源资源共享中介軟體
+app.UseCors(MyAllowSpecificOrigins);//跨源资源共享中介軟體  默認情況下允許來自任何來源的任何請求
 app.UseAuthentication();//驗證中介軟體 身分驗證
 app.UseAuthorization();//授權中介軟體  身分授權
 //app.UseSession();//工作階段中介軟體
