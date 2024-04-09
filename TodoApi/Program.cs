@@ -60,7 +60,7 @@ else//在生產環境中執行時
     app.UseHsts();//HTTP 靜態傳輸安全性通訊協定 (HSTS) 中介軟體
 }
 
-app.UseHttpsRedirection();//HTTPS 重新導向中介軟體
+app.UseHttpsRedirection();//HTTPS 重新導向中介軟體    會擋下HTTPS外的所有請求
 
 //靜態檔案中介軟體  啟用靜態檔案存取   /images/test.png
 app.UseStaticFiles();
