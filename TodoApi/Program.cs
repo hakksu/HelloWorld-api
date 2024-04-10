@@ -4,9 +4,10 @@ using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.FileProviders; //靜態檔案設定用
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
+var builder = WebApplication.CreateBuilder(args);  //https://learn.microsoft.com/zh-cn/aspnet/core/fundamentals/logging/?view=aspnetcore-8.0
+//https://learn.microsoft.com/zh-tw/dotnet/api/microsoft.extensions.logging.loglevel?view=dotnet-plat-ext-8.0#microsoft-extensions-logging-loglevel-information
+builder.Logging.ClearProviders();//清除了現有的所有日誌提供程序
+builder.Logging.AddConsole();//日誌記錄將被輸出到應用程式的控制台
 
 builder.Services.AddControllers();
 
@@ -45,6 +46,17 @@ builder.Services.AddCors(options =>
                                               "http://www.contoso.com");
                       });
 });
+
+builder.Services.AddDistributedMemoryCache();
+
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromSeconds(10);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 
 var app = builder.Build();
 
@@ -85,7 +97,13 @@ app.UseRouting();//路由中介軟體 啟用路由
 app.UseCors(MyAllowSpecificOrigins);//跨源资源共享中介軟體  默認情況下允許來自任何來源的任何請求
 app.UseAuthentication();//驗證中介軟體 身分驗證
 app.UseAuthorization();//授權中介軟體  身分授權
-//app.UseSession();//工作階段中介軟體
+
+
+
+//    Cookie: 存儲在用戶的瀏覽器中，通常是作為文本文件的形式存在於用戶的電腦上。
+//   Session: 存儲在服務器上，通常是在服務器的內存中，也可以存儲在數據庫或文件系統中。
+
+app.UseSession();//工作階段中介軟體
 //註冊 Middleware 的方法
 app.Use(async (context, next) =>
             {
