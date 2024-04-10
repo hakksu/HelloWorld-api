@@ -8293,11 +8293,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\VS Code\\HelloWorld api\\TodoApi\\TodoApi.csproj",
+      "projectUniqueName": "d:\\VS Code\\HelloWorld api\\TodoApi\\TodoApi.csproj",
       "projectName": "TodoApi",
-      "projectPath": "D:\\VS Code\\HelloWorld api\\TodoApi\\TodoApi.csproj",
+      "projectPath": "d:\\VS Code\\HelloWorld api\\TodoApi\\TodoApi.csproj",
       "packagesPath": "C:\\Users\\nono\\.nuget\\packages\\",
-      "outputPath": "D:\\VS Code\\HelloWorld api\\TodoApi\\obj\\",
+      "outputPath": "d:\\VS Code\\HelloWorld api\\TodoApi\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\nono\\AppData\\Roaming\\NuGet\\NuGet.Config"

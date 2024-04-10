@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using TodoApi.Models;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.FileProviders; //靜態檔案設定用
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -63,7 +64,11 @@ else//在生產環境中執行時
 app.UseHttpsRedirection();//HTTPS 重新導向中介軟體    會擋下HTTPS外的所有請求
 
 //靜態檔案中介軟體  啟用靜態檔案存取   /images/test.png
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions{
+    FileProvider = new PhysicalFileProvider(
+           Path.Combine(builder.Environment.ContentRootPath, "testfiles")),
+    RequestPath = "/test"               //將testfiles的檔案顯示於 /test
+});
 
 //Cookie原則中介軟體 
 app.UseCookiePolicy(new CookiePolicyOptions
