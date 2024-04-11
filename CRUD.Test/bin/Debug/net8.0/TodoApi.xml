@@ -22,11 +22,19 @@
             <param name="id">資料的 ID</param>
             <response code="204">請求成功，但客戶端不需要更新目前的頁面</response>
         </member>
-        <member name="M:TodoApi.Controllers.helloworldController.PostTodoItem(TodoApi.Models.TodoItem)">
-            <remarks>
-            在資料庫內新增資料
-            </remarks>
-            <response code="201">請求成功且新的資源成功被創建</response>
+        <member name="M:TodoApi.Controllers.helloworldController.PostTodoItem(TodoApi.Controllers.helloworldController.TodoItemNoId)">
+             <remarks>
+             在資料庫內新增資料
+             
+            
+                 POST 
+                 {
+                    "name": "Item",
+                    "isComplete": true
+                 }
+            
+             </remarks>
+             <response code="201" type="TodoItemNoId">請求成功且新的資源成功被創建</response>
         </member>
         <member name="M:TodoApi.Controllers.helloworldController.DeleteTodoItem(System.Int64)">
             <remarks>

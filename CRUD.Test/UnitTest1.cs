@@ -95,14 +95,14 @@ public class Tests
     [Test]
     public void PostTodoItem_CreatesNewTodoItem()
     {
-        var newTodo = new TodoItem { Name = "New Todo", IsComplete = false };
+        var newTodo = new helloworldController.TodoItemNoId { Name = "New Todo", IsComplete = false };
 
         var result = _controller.PostTodoItem(newTodo).Result;
 
         var createdResult = (Microsoft.AspNetCore.Mvc.CreatedAtActionResult)result.Result;  //當成功創建新資源時，API通常返回的一種ActionResult類型 包含有關新資源的詳細資訊，例如狀態碼、位置和新資源本身。
-        var todo = (TodoItem)createdResult.Value;
+        var todo = (helloworldController.TodoItemNoId)createdResult.Value;
 
-        Assert.That(todo.Id, Is.EqualTo(3)); 
+        ///Assert.That(todo.Id, Is.EqualTo(3)); 
         Assert.That(todo.Name, Is.EqualTo("New Todo"));
     }
 

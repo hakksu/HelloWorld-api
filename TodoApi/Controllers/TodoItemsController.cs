@@ -6,9 +6,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Models;
+using System.Text.Json.Serialization;
+
+//using Swashbuckle.AspNetCore.Annotations;
+//using Swashbuckle.AspNetCore.Filters;
 
 using Microsoft.OpenApi.Models;
-
 
 namespace TodoApi.Controllers
 {
@@ -28,7 +31,8 @@ namespace TodoApi.Controllers
         /// <remarks>
         /// 取得目前資料庫內所有資料
         /// </remarks>
-        [HttpGet]   
+        [HttpGet]  
+        //[SwaggerOperation(Summary = "取得目前資料庫內所有資料")] 
         
         public async Task<ActionResult<IEnumerable<TodoItem>>> GetTodoItems()
         {
@@ -92,21 +96,44 @@ namespace TodoApi.Controllers
             return NoContent();
         }
 
+        public class TodoItemNoId
+        {
+            [JsonIgnore]
+            public long Id { get; set; }
+            public string? Name { get; set; }
+            public bool IsComplete { get; set; }
+        }
+
         // POST: api/TodoItems
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         /// <remarks>
         /// 在資料庫內新增資料
+        /// 
+        ///
+        ///     POST 
+        ///     {
+        ///        "name": "Item",
+        ///        "isComplete": true
+        ///     }
+        ///
         /// </remarks>
-        /// <response code="201">請求成功且新的資源成功被創建</response>
+        /// <response code="201" type="TodoItemNoId">請求成功且新的資源成功被創建</response>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItem todoItem)
+        //[SwaggerRequestExample(typeof(TodoItemNoId), typeof(CreateTodoItemNoIdExample))]
+        [ProducesResponseType(typeof(TodoItemNoId),StatusCodes.Status201Created)]
+        public async Task<ActionResult<TodoItemNoId>> PostTodoItem(TodoItemNoId todoItem1)
         {
+            long a=0;
+            //var todoItemNoId = new { Name = todoItem.Name, IsComplete = todoItem.IsComplete };
+            var todoItem = new TodoItem(){Id  =a, Name = todoItem1.Name, IsComplete = todoItem1.IsComplete };
             _context.TodoItems.Add(todoItem);
             await _context.SaveChangesAsync();
+            
 
             //return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
-            return CreatedAtAction(nameof(GetTodoItem), new { id = todoItem.Id }, todoItem);
+            //return CreatedAtAction(nameof(GetTodoItem), new { id = todoItem.Id }, todoItem);
+            ///return CreatedAtAction(nameof(GetTodoItem), new { id = todoItem.Id }, todoItemNoId);
+            return CreatedAtAction(nameof(GetTodoItem), new { id = todoItem.Id }, todoItem1);
         }
 
 

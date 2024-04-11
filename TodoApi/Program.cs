@@ -4,6 +4,10 @@ using TodoApi.Models;
 //using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
 
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Linq;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -21,7 +25,10 @@ builder.Services.AddSwaggerGen(options =>
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     options.IncludeXmlComments(xmlPath);
+
+     options.OperationFilter<RemoveIdFromRequestBodyFilter>();
 });
+
 
 var app = builder.Build();
 
@@ -40,4 +47,20 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public class RemoveIdFromRequestBodyFilter : IOperationFilter
+{
+    public void Apply(OpenApiOperation operation, OperationFilterContext context)
+    {
+        Console.WriteLine($"Applying RemoveIdFromRequestBodyFilter to operation: {operation.OperationId}");
+        if (operation.RequestBody != null && operation.RequestBody.Content.ContainsKey("application/json"))
+        {
+            var schema = operation.RequestBody.Content["application/json"].Schema;
+            if (schema.Properties.ContainsKey("id"))
+            {
+                schema.Properties.Remove("id");
+            }
+        }
+    }
+}
 
