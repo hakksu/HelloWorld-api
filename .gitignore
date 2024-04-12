@@ -32,3 +32,6 @@ TodoApi/obj/project.nuget.cache
 TodoApi/obj/TodoApi.csproj.nuget.dgspec.json
 TodoApi/obj/Debug/net8.0/TodoApi.csproj.CoreCompileInputs.cache
 TodoApi/obj/Debug/net8.0/TodoApi.genruntimeconfig.cache
+TodoApi/obj/Debug/net8.0/TodoApi.assets.cache
+TodoApi/obj/Debug/net8.0/TodoApi.GeneratedMSBuildEditorConfig.editorconfig
+TodoApi/obj/Debug/net8.0/TodoApi.sourcelink.json

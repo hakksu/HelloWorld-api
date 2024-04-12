@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  web:  #服務名稱
+    build: .
+    ports:
+      - "4000:8080"
+    environment: #設置服務的環境變量
+      - ASPNETCORE_ENVIRONMENT=Development   #以開發環境的模式運行
