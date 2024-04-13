@@ -3,7 +3,7 @@
 ## 使用專案
 
 1. 下載此專案。
-2. 使用 Visual Studio Code 開啟下載的資料夾位址。
+2. 使用 Visual Studio Code 開啟下載的資料夾位址或直接以Visual Studio開啟.sln。
 3. 執行專案，確保後端伺服器正常運行並可以訪問 HelloWorld API。
 
 ## Ngrok
