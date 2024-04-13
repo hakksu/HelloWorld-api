@@ -65,6 +65,8 @@ d:\VS Code\HelloWorld api\TodoApi\bin\Debug\net8.0\NuGet.Protocol.dll
 d:\VS Code\HelloWorld api\TodoApi\bin\Debug\net8.0\NuGet.Versioning.dll
 d:\VS Code\HelloWorld api\TodoApi\bin\Debug\net8.0\nunit.framework.dll
 d:\VS Code\HelloWorld api\TodoApi\bin\Debug\net8.0\nunit.framework.legacy.dll
+d:\VS Code\HelloWorld api\TodoApi\bin\Debug\net8.0\Pipelines.Sockets.Unofficial.dll
+d:\VS Code\HelloWorld api\TodoApi\bin\Debug\net8.0\StackExchange.Redis.dll
 d:\VS Code\HelloWorld api\TodoApi\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
 d:\VS Code\HelloWorld api\TodoApi\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 d:\VS Code\HelloWorld api\TodoApi\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll

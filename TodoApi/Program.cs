@@ -8,6 +8,8 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Linq;
 
+using StackExchange.Redis;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -20,14 +22,19 @@ builder.Services.AddDbContext<TodoContext>(opt =>
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    options.IncludeXmlComments(xmlPath);
+builder.Services.AddSwaggerGen();
 
-     options.OperationFilter<RemoveIdFromRequestBodyFilter>();
-});
+var redisOptions = new ConfigurationOptions
+{
+    EndPoints = { "localhost:6379" }, // Redis 伺服器地址和端口號
+    Password = "your_redis_password", // 如果有密碼的話
+    ConnectTimeout = 5000, // 連接超時時間（毫秒）
+    SyncTimeout = 5000 // 同步操作超時時間（毫秒）
+};
+
+var redisConnection = ConnectionMultiplexer.Connect(redisOptions);
+
+builder.Services.AddSingleton<IConnectionMultiplexer>(redisConnection);  //將你的 Redis 連接註冊為服務，以便在整個應用程式中使用
 
 
 var app = builder.Build();
@@ -48,19 +55,5 @@ app.MapControllers();
 
 app.Run();
 
-public class RemoveIdFromRequestBodyFilter : IOperationFilter
-{
-    public void Apply(OpenApiOperation operation, OperationFilterContext context)
-    {
-        Console.WriteLine($"Applying RemoveIdFromRequestBodyFilter to operation: {operation.OperationId}");
-        if (operation.RequestBody != null && operation.RequestBody.Content.ContainsKey("application/json"))
-        {
-            var schema = operation.RequestBody.Content["application/json"].Schema;
-            if (schema.Properties.ContainsKey("id"))
-            {
-                schema.Properties.Remove("id");
-            }
-        }
-    }
-}
+
 

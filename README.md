@@ -11,3 +11,9 @@
 2. 使用 Visual Studio Code 開啟下載的資料夾位址。
 3. 在TodoApi專案位置下執行終端機後，執行指令: docker compose up
 4. 可用docker ps 指令確認容器狀態
+
+## 建立redis server
+
+1. 在終端機中執行指令 docker run --name my-redis -d -p 6379:6379 redis 以開啟 Redis，並將容器的 6379 端口映射到主機的 6379 端口上。
+2. 可用docker ps 指令確認容器狀態
+3. 可在docker中使用redis-cli後輸入KEYS *查看現有資料，HGETALL 鍵名可查看資料內容。

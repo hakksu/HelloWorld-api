@@ -13,17 +13,23 @@ using System.Text.Json.Serialization;
 
 using Microsoft.OpenApi.Models;
 
+using StackExchange.Redis;
+
+
 namespace TodoApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class helloworldController : ControllerBase
     {
-        private readonly TodoContext _context;
+        //private readonly TodoContext _context;
+        private readonly IDatabase _redisDatabase;
 
-        public helloworldController(TodoContext context)
+        //public helloworldController(TodoContext context)
+        public helloworldController( IConnectionMultiplexer redisConnection)
         {
-            _context = context;
+           // _context = context;
+           _redisDatabase = redisConnection.GetDatabase();
         }
 
         // GET: api/TodoItems
@@ -32,11 +38,59 @@ namespace TodoApi.Controllers
         /// 取得目前資料庫內所有資料
         /// </remarks>
         [HttpGet]  
-        //[SwaggerOperation(Summary = "取得目前資料庫內所有資料")] 
-        
+        //[SwaggerOperation(Summary = "取得目前資料庫內所有資料")]      
         public async Task<ActionResult<IEnumerable<TodoItem>>> GetTodoItems()
         {
-            return await _context.TodoItems.ToListAsync();
+            //var todoItems = new List<TodoItem>();
+            try{
+                Console.WriteLine("keys"); 
+                var keys = _redisDatabase.Multiplexer.GetServer("localhost", 6379)
+                .Keys(pattern: "TodoItems:*")
+                .Where(key => key != "TodoItems:NextId")
+                .OrderBy(key => long.Parse(key.ToString().Substring("TodoItems:".Length)));
+                
+                var todoItems = new List<TodoItem>();
+
+                Console.WriteLine(keys); 
+
+                foreach (var key in keys)
+                {
+                    var hashEntries = await _redisDatabase.HashGetAllAsync(key);
+                    
+                    //var keyType = await _redisDatabase.KeyTypeAsync(key);
+                    //if (keyType == RedisType.Hash)
+                    //{
+                        var todoItem = new TodoItem();
+                        todoItem.Id=1;
+                        foreach (var hashEntry in hashEntries)
+                        {
+                            if (hashEntry.Name == "Id")
+                            {
+                                todoItem.Id = long.Parse(hashEntry.Value.ToString());
+                            }
+                            if (hashEntry.Name == "Name")
+                            {
+                                todoItem.Name = hashEntry.Value.ToString();
+                            }
+                            else if (hashEntry.Name == "IsComplete")
+                            {
+                                todoItem.IsComplete =Convert.ToBoolean(hashEntry.Value.ToString());
+                            }
+                        }
+
+                        todoItems.Add(todoItem);
+                   // }
+                }
+
+                return todoItems;
+
+                //return await _context.TodoItems.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                // 處理錯誤
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal Server Error: {ex.Message}");
+            }
         }
 
         // GET: api/TodoItems/5
@@ -48,14 +102,28 @@ namespace TodoApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TodoItem>> GetTodoItem(long id)
         {
-            var todoItem = await _context.TodoItems.FindAsync(id);
+            try{
+                // 檢查要取得的 TodoItem 是否存在
+                var hashItem = await _redisDatabase.HashGetAllAsync($"TodoItems:{id}");
+                if (hashItem== null || hashItem.Length == 0)
+                {
+                    return NotFound();
+                }
+                // 將 Hash 轉換為 TodoItem 對象
+                var todoItem = new TodoItem
+                {
+                    Id = id,
+                    Name = hashItem.SingleOrDefault(f => f.Name == "Name").Value,
+                    IsComplete = bool.Parse(hashItem.SingleOrDefault(f => f.Name == "IsComplete").Value)
+                };
 
-            if (todoItem == null)
-            {
-                return NotFound();
+                return todoItem;
             }
-
-            return todoItem;
+            catch (Exception ex)
+            {
+                // 處理錯誤
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal Server Error: {ex.Message}");
+            }
         }
 
         // PUT: api/TodoItems/5
@@ -70,30 +138,30 @@ namespace TodoApi.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> PutTodoItem(long id, TodoItem todoItem)
         {
-            if (id != todoItem.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(todoItem).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TodoItemExists(id))
+            try{
+                // 檢查要取得的 TodoItem 是否存在
+                var hashItem = await _redisDatabase.HashGetAllAsync($"TodoItems:{id}");
+                if (hashItem== null || hashItem.Length == 0 )
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
-            }
 
-            return NoContent();
+                // 更新 TodoItem 的屬性
+                var hashFields = new HashEntry[]
+                {
+                    new HashEntry("Id", id),
+                    new HashEntry("Name", todoItem.Name),
+                    new HashEntry("IsComplete", todoItem.IsComplete.ToString())
+                };
+                await _redisDatabase.HashSetAsync($"TodoItems:{id}", hashFields);
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                // 處理錯誤
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal Server Error: {ex.Message}");
+            }
         }
 
         public class TodoItemNoId
@@ -103,6 +171,7 @@ namespace TodoApi.Controllers
             public string? Name { get; set; }
             public bool IsComplete { get; set; }
         }
+
 
         // POST: api/TodoItems
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -123,18 +192,28 @@ namespace TodoApi.Controllers
         [ProducesResponseType(typeof(TodoItemNoId),StatusCodes.Status201Created)]
         public async Task<ActionResult<TodoItemNoId>> PostTodoItem(TodoItemNoId todoItem1)
         {
-            long a=0;
-            //var todoItemNoId = new { Name = todoItem.Name, IsComplete = todoItem.IsComplete };
+            long a = await _redisDatabase.StringIncrementAsync("TodoItems:NextId");// 自動遞增 ID
             var todoItem = new TodoItem(){Id  =a, Name = todoItem1.Name, IsComplete = todoItem1.IsComplete };
-            _context.TodoItems.Add(todoItem);
-            await _context.SaveChangesAsync();
-            
+            try
+            {
+                // 將 TodoItem 存儲為 Hash
+                var hashFields = new HashEntry[]
+                {
+                    new HashEntry("Id", todoItem.Id),
+                    new HashEntry("Name", todoItem.Name),
+                    new HashEntry("IsComplete", todoItem.IsComplete.ToString())
+                };
+                await _redisDatabase.HashSetAsync($"TodoItems:{todoItem.Id}", hashFields);
 
-            //return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
-            //return CreatedAtAction(nameof(GetTodoItem), new { id = todoItem.Id }, todoItem);
-            ///return CreatedAtAction(nameof(GetTodoItem), new { id = todoItem.Id }, todoItemNoId);
-            return CreatedAtAction(nameof(GetTodoItem), new { id = todoItem.Id }, todoItem1);
-        }
+                return CreatedAtAction(nameof(GetTodoItem), new { id = todoItem.Id }, todoItem);
+            }
+            catch (Exception ex)
+            {
+                // 處理錯誤
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal Server Error: {ex.Message}");
+            }
+            
+        }//*/
 
 
 
@@ -148,21 +227,30 @@ namespace TodoApi.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> DeleteTodoItem(long id)
         {
-            var todoItem = await _context.TodoItems.FindAsync(id);
-            if (todoItem == null)
-            {
-                return NotFound();
-            }
+            try
+                {
+                    // 檢查要刪除的 TodoItem 是否存在
+                    var existingItem = await _redisDatabase.HashGetAllAsync($"TodoItems:{id}");
+                    Console.WriteLine("existingItem");
+                    Console.WriteLine(existingItem ); 
+                    Console.WriteLine(existingItem.Length ); 
+                    if (existingItem == null || existingItem.Length == 0 )
+                    {
+                        Console.WriteLine("existingItem12" ); 
+                        return NotFound();                        
+                    }
 
-            _context.TodoItems.Remove(todoItem);
-            await _context.SaveChangesAsync();
+                    // 刪除指定 ID 的 TodoItem
+                    await _redisDatabase.KeyDeleteAsync($"TodoItems:{id}");
 
-            return NoContent();
+                    // 返回成功的 HTTPS 回應，不帶任何內容
+                    return NoContent();
+                }
+                catch (Exception ex)
+                {
+                    // 處理錯誤
+                    return StatusCode(StatusCodes.Status500InternalServerError, $"Internal Server Error: {ex.Message}");
+                }
         }
-
-        private bool TodoItemExists(long id)
-        {
-            return _context.TodoItems.Any(e => e.Id == id);
-        }//*/
     }
 }
