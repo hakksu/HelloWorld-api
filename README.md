@@ -9,8 +9,8 @@
 
 1. 下載此專案。
 2. 使用 Visual Studio Code 開啟下載的資料夾位址。
-3. 在TodoApi專案位置下執行終端機後，執行指令: docker compose up
-4. 可用docker ps 指令確認容器狀態
+3. 在TodoApi專案位置下執行終端機後，執行指令: docker compose -p postgresql-server-project up 
+4. -p後面可自行設定名稱，可用docker ps 指令確認容器狀態
 
 # 使用docker compose 應可架設資料庫server 下面是手動的方式
 
