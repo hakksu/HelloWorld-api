@@ -13,6 +13,11 @@ WORKDIR /app/src
 # 複製檔案到 /app/src 目錄
 COPY . .
 
+#創建一個初始的資料庫遷移，用於定義您的資料庫模型的初始狀態。
+RUN dotnet ef migrations add InitialCreate
+# 執行 dotnet ef 命令來執行資料庫遷移
+RUN dotnet ef database update
+
 # 對外暴露端口
 EXPOSE 8080
 

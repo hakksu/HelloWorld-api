@@ -1,6 +1,18 @@
 version: '3.8'
 
 services:
+  postgres:
+    image: postgres:latest
+    container_name: MyPostgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./Postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: '12345'  
+      
   web:  #服務名稱
     build: .
     ports:

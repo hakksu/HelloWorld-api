@@ -15,15 +15,27 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-
+/*
+if (connectionString == null)
+{
+    Console.WriteLine("連接字串為空！");
+}
+else
+{
+    Console.WriteLine($"連接字串為：{connectionString}");
+}*/
 builder.Services.AddDbContext<TodoContext>(opt =>
-    opt.UseInMemoryDatabase("TodoList"));
+    {
+    var connectionString = builder.Configuration.GetConnectionString("PostgresConnection"); //讀取appsettings.json中的字符串
+    Console.WriteLine(connectionString); 
+    opt.UseNpgsql(connectionString);
+    });
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+/*
 var redisOptions = new ConfigurationOptions
 {
     EndPoints = { "localhost:6379" }, // Redis 伺服器地址和端口號
@@ -34,7 +46,7 @@ var redisOptions = new ConfigurationOptions
 
 var redisConnection = ConnectionMultiplexer.Connect(redisOptions);
 
-builder.Services.AddSingleton<IConnectionMultiplexer>(redisConnection);  //將你的 Redis 連接註冊為服務，以便在整個應用程式中使用
+builder.Services.AddSingleton<IConnectionMultiplexer>(redisConnection);  //將你的 Redis 連接註冊為服務，以便在整個應用程式中使用*/
 
 
 var app = builder.Build();

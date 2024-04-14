@@ -12,8 +12,11 @@
 3. 在TodoApi專案位置下執行終端機後，執行指令: docker compose up
 4. 可用docker ps 指令確認容器狀態
 
-## 建立redis server
+# 使用docker compose 應可架設資料庫server 下面是手動的方式
 
-1. 在終端機中執行指令 docker run --name my-redis -d -p 6379:6379 redis 以開啟 Redis，並將容器的 6379 端口映射到主機的 6379 端口上。
+## 建立PostgreSQL server
+
+1. 在終端機中執行指令 docker run --name MyPostgres -d -p 5432:5432 -v ./Postgres:/var/lib/postgresql/data -e POSTGRES_DB=mydatabase -e POSTGRES_USER=user -e POSTGRES_PASSWORD='12345' postgres:latest
 2. 可用docker ps 指令確認容器狀態
-3. 可在docker中使用redis-cli後輸入KEYS *查看現有資料，HGETALL 鍵名可查看資料內容。
+3. dotnet ef migrations add InitialCreate 創建一個初始的資料庫遷移，用於定義您的資料庫模型的初始狀態。
+4. dotnet ef database update              應用新創建的遷移，並創建與您的資料模型相對應的資料庫表格。
