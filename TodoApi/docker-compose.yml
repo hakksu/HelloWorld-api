@@ -1,6 +1,12 @@
 version: '3.8'
 
 services:
+  redis:
+    image: redis
+    container_name: my-redis-server
+    ports:
+      - "6379:6379"
+
   web:  #服務名稱
     build: .
     ports:
